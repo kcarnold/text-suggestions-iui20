@@ -223,23 +223,11 @@ def get_top_k(logits, vocab, k, prefix=None):
 
 print("Loading ONMT models...")
 model_specs = {
-  # 'cnndm_sum': dict(
-  #   filename='ada5_acc_49.81_ppl_12.70_e16.pt', # 'cnndm_sum_acc_49.59_ppl_14.37_e15.pt',
-  #   # filename="model-copy_acc_51.78_ppl_11.71_e20.pt",
-  #   args='-replace_unk -alpha 0.9 -beta .25'),
-  # 'cnndm_lm': dict(
-  #   filename='cnndm_lm_acc_27.76_ppl_86.49_e20.pt',
-  #   args=''),
   'coco_lm': dict(
     #filename='coco_lm_acc_44.56_ppl_18.76_e20.pt',
     # filename='coco_lm_acc_44.84_ppl_17.58_e20.pt',
     filename='coco_lm_adam_acc_46.00_ppl_16.32_e10_nooptim.pt',
     args='',),
-  'coco_cap': dict(
-    # filename='coco_cap_2_acc_42.97_ppl_18.83_e20.pt',
-    filename='coco_cap_adam_acc_48.73_ppl_12.56_e10_nooptim.pt',
-    args='-data_type vecs',
-    )
 }
 models = dict()
 for name, spec in model_specs.items():
