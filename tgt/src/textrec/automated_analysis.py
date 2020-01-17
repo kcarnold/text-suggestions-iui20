@@ -80,27 +80,32 @@ def taps_to_type(txt, threshold=None):
 #             cur_desired_word = cur_desired_word[:-1]
 #         print(repr(prefix), repr(cur_word), repr(cur_desired_word))
         recs = rec_gen(onmt_model_2.tokenize(prefix), prefix=cur_word)
-        words = [word for word, rec in recs]
+        potentially_suggested_words = [word for word, rec in recs]
+        suggested_words = potentially_suggested_words
+        max_prob = max(prob for word, prob in recs if prob is not None)
         if threshold is not None:
-            show_recs = max(prob for word, prob in recs if prob is not None) > threshold
+            show_recs = max_prob > threshold
             if not show_recs:
-                words = []
-        # print(prefix, words)
-        if cur_desired_word in words:
-            actions.append(dict(type='rec', which=words.index(cur_desired_word), word=cur_desired_word, cur_word=cur_word))
+                suggested_words = []
+        if cur_desired_word in suggested_words:
+            action = dict(type='rec', which=suggested_words.index(cur_desired_word), word=cur_desired_word, cur_word=cur_word)
             idx = last_space_idx + 1 + len(cur_desired_word) + 1
         else:
-            actions.append(dict(type='key', key=txt[idx], cur_word=cur_word))
+            action = dict(type='key', key=txt[idx], cur_word=cur_word)
             idx += 1
-        actions[-1]['recs_shown'] = len(words) > 0
-        recs_log.append(recs)
-        # print(actions[-1])
-    return actions, recs_log
+        action['recs_shown'] = suggested_words
+        action['recs_all'] = potentially_suggested_words
+        action['max_rec_prob'] = max_prob
+        actions.append(action)
+    return actions
 
+
+def depunct(text):
+    return text.replace('.', '').replace(',', '')
 
 def all_taps_to_type(stimulus, text, prefix):
     # taps_to_type is broken wrt word-ending punctuation. Hack around that.
-    text_without_punct = text.replace('.', '').replace(',', '')
+    text_without_punct = depunct(text)
     num_punct = len(text) - len(text_without_punct)
     taps_by_cond = dict(
         norecs=[dict(type='key', key=c) for c in text_without_punct],

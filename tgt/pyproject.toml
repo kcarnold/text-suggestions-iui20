@@ -14,6 +14,8 @@ torchtext = "=0.2.3"
 h5py = "^2.9"
 nltk = "=3.2.5"
 wordfreq = "^2.2.1"
+pandas = "^0.24"
+tqdm = "^4.41.1"
 
 [build-system]
 requires = ["poetry>=0.12"]
