@@ -35,7 +35,7 @@ settings = dict(
     )
 
 server_settings = dict(
-    address='127.0.0.1',
+    address='', # Listen on all interfaces
     xheaders=True)
 
 from . import rec_generator
